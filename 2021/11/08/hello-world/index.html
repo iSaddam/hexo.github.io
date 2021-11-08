@@ -22,30 +22,42 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Stay hungry stay foolish！">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Rex.Y.Zhang&#39;s Blog">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="面试官：今天来聊聊JVM的内存结构吧？候选者：嗯，好的候选者：前几次面试的时候也提到了：class文件会被类加载器装载至JVM中，并且JVM会负责程序「运行时」的「内存管理」候选者：而JVM的内存结构，往往指的就是JVM定义的「运行时数据区域」候选者：简单来说就分为了5大块：方法区、堆、程序计数器、虚拟机栈、本地方法栈候选者：要值得注意的是：这是JVM「规范」的分区概念，到具体的实现落地，不同的厂">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试官问我JVM内存结构，我真的是">
+<meta property="og:url" content="http://example.com/2021/11/08/hello-world/index.html">
 <meta property="og:site_name" content="Rex.Y.Zhang&#39;s Blog">
-<meta property="og:description" content="Stay hungry stay foolish！">
+<meta property="og:description" content="面试官：今天来聊聊JVM的内存结构吧？候选者：嗯，好的候选者：前几次面试的时候也提到了：class文件会被类加载器装载至JVM中，并且JVM会负责程序「运行时」的「内存管理」候选者：而JVM的内存结构，往往指的就是JVM定义的「运行时数据区域」候选者：简单来说就分为了5大块：方法区、堆、程序计数器、虚拟机栈、本地方法栈候选者：要值得注意的是：这是JVM「规范」的分区概念，到具体的实现落地，不同的厂">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/pasted-8.png">
+<meta property="og:image" content="http://example.com/images/pasted-0.png">
+<meta property="og:image" content="http://example.com/images/pasted-1.png">
+<meta property="og:image" content="http://example.com/images/pasted-2.png">
+<meta property="og:image" content="http://example.com/images/pasted-3.png">
+<meta property="og:image" content="http://example.com/images/pasted-4.png">
+<meta property="og:image" content="http://example.com/images/pasted-6.png">
+<meta property="og:image" content="http://example.com/images/pasted-7.png">
+<meta property="article:published_time" content="2021-11-08T01:13:00.000Z">
+<meta property="article:modified_time" content="2021-11-08T02:13:10.258Z">
 <meta property="article:author" content="Rex Y Zhang">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/pasted-8.png">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2021/11/08/hello-world/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>Rex.Y.Zhang's Blog</title>
+  <title>面试官问我JVM内存结构，我真的是 | Rex.Y.Zhang's Blog</title>
   
 
 
@@ -187,9 +199,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -205,10 +218,9 @@
       <meta itemprop="name" content="Rex.Y.Zhang's Blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/08/hello-world/" class="post-title-link" itemprop="url">面试官问我JVM内存结构，我真的是</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          面试官问我JVM内存结构，我真的是
+        </h1>
 
         <div class="post-meta">
 
@@ -233,6 +245,13 @@
             </span>
 
           
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
 
         </div>
       </header>
@@ -243,7 +262,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><img src="/images/pasted-8.png" alt="upload successful"><br>面试官：今天来聊聊JVM的内存结构吧？<br>候选者：嗯，好的<br>候选者：前几次面试的时候也提到了：class文件会被类加载器装载至JVM中，并且JVM会负责程序「运行时」的「内存管理」<br>候选者：而JVM的内存结构，往往指的就是JVM定义的「运行时数据区域」<br>候选者：简单来说就分为了5大块：方法区、堆、程序计数器、虚拟机栈、本地方法栈<br>候选者：要值得注意的是：这是JVM「规范」的分区概念，到具体的实现落地，不同的厂商实现可能是有所区别的。</p>
+        <p><img src="/images/pasted-8.png" alt="upload successful"><br>面试官：今天来聊聊JVM的内存结构吧？<br>候选者：嗯，好的<br>候选者：前几次面试的时候也提到了：class文件会被类加载器装载至JVM中，并且JVM会负责程序「运行时」的「内存管理」<br>候选者：而JVM的内存结构，往往指的就是JVM定义的「运行时数据区域」<br>候选者：简单来说就分为了5大块：方法区、堆、程序计数器、虚拟机栈、本地方法栈<br>候选者：要值得注意的是：这是JVM「规范」的分区概念，到具体的实现落地，不同的厂商实现可能是有所区别的。</p>
 <p><img src="/images/pasted-0.png" alt="upload successful"><br>面试官：嗯，顺便讲下你这图上每个区域的内容吧。<br>候选者：好的，那我就先从「程序计数器」开始讲起吧。<br>候选者：Java是多线程的语言，我们知道假设线程数大于CPU数，就很有可能有「线程切换」现象，切换意味着「中断」和「恢复」，那自然就需要有一块区域来保存「当前线程的执行信息」<br>候选者：所以，程序计数器就是用于记录各个线程执行的字节码的地址（分支、循环、跳转、异常、线程恢复等都依赖于计数器）<br>面试官：好的，理解了。<br>候选者：那接下来我就说下「虚拟机栈」吧<br>候选者：每个线程在创建的时候都会创建一个「虚拟机栈」，每次方法调用都会创建一个「栈帧」。每个「栈帧」会包含几块内容：局部变量表、操作数栈、动态连接和返回地址</p>
 <p><img src="/images/pasted-1.png" alt="upload successful"><br>候选者：了解了「虚拟机栈」的组成后，也不难猜出它的作用了：它保存方法了局部变量、部分变量的计算并参与了方法的调用和返回。<br>面试官：ok，了解了<br>候选者：下面就说下「本地方法栈」吧<br>候选者：本地方法栈跟虚拟机栈的功能类似，虚拟机栈用于管理 Java 函数的调用，而本地方法栈则用于管理本地方法的调用。这里的「本地方法」指的是「非Java方法」，一般本地方法是使用C语言实现的。<br>面试官：嗯…<br>候选者：嗯，说完了「本地方法栈」、「虚拟机栈」和「程序计数器」，哦，下面还有「方法区」和「堆」<br>候选者：那我先说「方法区」吧<br>候选者：前面提到了运行时数据区这个「分区」是JVM的「规范」，具体的落地实现，不同的虚拟机厂商可能是不一样的<br>候选者：所以「方法区」也只是 JVM 中规范的一部分而已。<br>候选者：在HotSpot虚拟机，就会常常提到「永久代」这个词。HotSpot虚拟机在「JDK8前」用「永久代」实现了「方法区」，而很多其他厂商的虚拟机其实是没有「永久代」的概念的。</p>
 <p><img src="/images/pasted-2.png" alt="upload successful"><br>候选者：我们下面的内容就都用HotSpot虚拟机来说明好了。<br>候选者：在JDK8中，已经用「元空间」来替代了「永久代」作为「方法区」的实现了<br>面试官：嗯…<br>候选者：方法区主要是用来存放已被虚拟机加载的「类相关信息」：包括类信息、常量池<br>候选者：类信息又包括了类的版本、字段、方法、接口和父类等信息。<br>候选者：常量池又可以分「静态常量池」和「运行时常量池」<br>候选者：静态常量池主要存储的是「字面量」以及「符号引用」等信息，静态常量池也包括了我们说的「字符串常量池」。<br>候选者：「运行时常量池」存储的是「类加载」时生成的「直接引用」等信息。</p>
@@ -252,21 +271,92 @@
 <p><img src="/images/pasted-6.png" alt="upload successful"><br>候选者：将「堆内存」分开了几块区域，主要跟「内存回收」有关（垃圾回收机制）<br>面试官：那垃圾回收这块等下次吧，这个延伸下去又很多东西了<br>面试官：你要不先讲讲JVM内存结构和Java内存模型有啥区别吧？<br>候选者：他们俩没有啥直接关联，其实两次面试过后，应该你就有感觉了<br>候选者：Java内存模型是跟「并发」相关的，它是为了屏蔽底层细节而提出的规范，希望在上层(Java层面上)在操作内存时在不同的平台上也有相同的效果<br>候选者：Java内存结构（又称为运行时数据区域），它描述着当我们的class文件加载至虚拟机后，各个分区的「逻辑结构」是如何的，每个分区承担着什么作用。<br>面试官：了解了<br>今日总结：JVM内存结构组成（JVM内存结构又称为「运行时数据区域」。主要有五部分组成：虚拟机栈、本地方法栈、程序计数器、方法区和堆。其中方法区和堆是线程共享的。虚拟机栈、本地方法栈以及程序计数器是线程隔离的）</p>
 <p><img src="/images/pasted-7.png" alt="upload successful"></p>
 
-      
     </div>
 
     
     
     
+        <div class="reward-container">
+  <div>原创技术分享，您的支持将鼓励我继续创作</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Rex Y Zhang 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Rex Y Zhang 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>掘金
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2021/11/08/hello-world/" title="面试官问我JVM内存结构，我真的是">http://example.com/2021/11/08/hello-world/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+          </div>
+
+        
+
+
+        
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
