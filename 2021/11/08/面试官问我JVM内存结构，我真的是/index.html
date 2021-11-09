@@ -25,7 +25,7 @@
   <meta name="description" content="面试官：今天来聊聊JVM的内存结构吧？候选者：嗯，好的候选者：前几次面试的时候也提到了：class文件会被类加载器装载至JVM中，并且JVM会负责程序「运行时」的「内存管理」候选者：而JVM的内存结构，往往指的就是JVM定义的「运行时数据区域」候选者：简单来说就分为了5大块：方法区、堆、程序计数器、虚拟机栈、本地方法栈候选者：要值得注意的是：这是JVM「规范」的分区概念，到具体的实现落地，不同的厂">
 <meta property="og:type" content="article">
 <meta property="og:title" content="面试官问我JVM内存结构，我真的是">
-<meta property="og:url" content="http://example.com/2021/11/08/hello-world/index.html">
+<meta property="og:url" content="http://example.com/2021/11/08/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%EF%BC%8C%E6%88%91%E7%9C%9F%E7%9A%84%E6%98%AF/index.html">
 <meta property="og:site_name" content="Rex.Y.Zhang&#39;s Blog">
 <meta property="og:description" content="面试官：今天来聊聊JVM的内存结构吧？候选者：嗯，好的候选者：前几次面试的时候也提到了：class文件会被类加载器装载至JVM中，并且JVM会负责程序「运行时」的「内存管理」候选者：而JVM的内存结构，往往指的就是JVM定义的「运行时数据区域」候选者：简单来说就分为了5大块：方法区、堆、程序计数器、虚拟机栈、本地方法栈候选者：要值得注意的是：这是JVM「规范」的分区概念，到具体的实现落地，不同的厂">
 <meta property="og:locale" content="zh_CN">
@@ -44,7 +44,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/images/pasted-8.png">
 
-<link rel="canonical" href="http://example.com/2021/11/08/hello-world/">
+<link rel="canonical" href="http://example.com/2021/11/08/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%EF%BC%8C%E6%88%91%E7%9C%9F%E7%9A%84%E6%98%AF/">
 
 
 <script id="page-configurations">
@@ -92,6 +92,15 @@
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
+
+  
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/js/cursor/explosion.min.js"></script>
+  
+
+
+
   <div class="container use-motion">
     <div class="headband"></div>
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -207,7 +216,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/08/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/08/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%EF%BC%8C%E6%88%91%E7%9C%9F%E7%9A%84%E6%98%AF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -224,7 +233,6 @@
         </h1>
 
         <div class="post-meta">
-
           
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -298,7 +306,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2021/11/08/hello-world/" title="面试官问我JVM内存结构，我真的是">http://example.com/2021/11/08/hello-world/</a>
+    <a href="http://example.com/2021/11/08/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%EF%BC%8C%E6%88%91%E7%9C%9F%E7%9A%84%E6%98%AF/" title="面试官问我JVM内存结构，我真的是">http://example.com/2021/11/08/面试官问我JVM内存结构，我真的是/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -348,7 +356,7 @@
     <div class="post-nav">
       <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2021/11/08/Untitled/" rel="next" title="我是三本学生：社会不是「看不起」我，是「看不见」我">
+    <a href="/2021/11/08/%E6%88%91%E6%98%AF%E4%B8%89%E6%9C%AC%E5%AD%A6%E7%94%9F%EF%BC%9A%E7%A4%BE%E4%BC%9A%E4%B8%8D%E6%98%AF%E3%80%8C%E7%9C%8B%E4%B8%8D%E8%B5%B7%E3%80%8D%E6%88%91%EF%BC%8C%E6%98%AF%E3%80%8C%E7%9C%8B%E4%B8%8D%E8%A7%81%E3%80%8D%E6%88%91/" rel="next" title="我是三本学生：社会不是「看不起」我，是「看不见」我">
       我是三本学生：社会不是「看不起」我，是「看不见」我 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -424,7 +432,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -437,7 +445,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -526,6 +534,7 @@ $(document).ready(function() {
        	
 });
 </script> 
+
 
         
 <div class="busuanzi-count">

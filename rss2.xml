@@ -9,8 +9,33 @@
     <atom:link href="http://example.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>Stay hungry stay foolish！</description>
-    <pubDate>Mon, 08 Nov 2021 12:03:21 GMT</pubDate>
+    <pubDate>Tue, 09 Nov 2021 12:23:16 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>吹爆这个最近在用的 IDEA 神器！</title>
+      <link>http://example.com/2021/11/09/%E5%90%B9%E7%88%86%E8%BF%99%E4%B8%AA%E6%9C%80%E8%BF%91%E5%9C%A8%E7%94%A8%E7%9A%84-IDEA-%E7%A5%9E%E5%99%A8%EF%BC%81/</link>
+      <guid>http://example.com/2021/11/09/%E5%90%B9%E7%88%86%E8%BF%99%E4%B8%AA%E6%9C%80%E8%BF%91%E5%9C%A8%E7%94%A8%E7%9A%84-IDEA-%E7%A5%9E%E5%99%A8%EF%BC%81/</guid>
+      <pubDate>Tue, 09 Nov 2021 12:16:00 GMT</pubDate>
+      
+      <description>&lt;p&gt;&lt;img src=&quot;/images/pasted-59.png&quot; alt=&quot;upload successful&quot;&gt;&lt;/p&gt;
+&lt;p&gt;在做源码分析的时候，我们常常会有这样一种需求，一堆源码看完后，我想画个时序图把思路捋一下，像下面这样：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/images/pasted-60.png&quot; alt=&quot;upload successful&quot;&gt;&lt;br&gt;画图的工具有很多，相信大部分小伙伴也都会画。&lt;br&gt;然而，画图太费时间了！！！而且这个图跟我们的代码关联性很大，就是照着代码画的。&lt;br&gt;那么问题就来了，能不能照着代码生成呢？要是能够照着代码生成，岂不是要爽很多。&lt;br&gt;今天松哥就给大家介绍一个我最近在用的 IDEA 插件 SequenceDiagram。&lt;/p&gt;</description>
+      
+      
+      
+      <content:encoded><![CDATA[<p><img src="/images/pasted-59.png" alt="upload successful"></p><p>在做源码分析的时候，我们常常会有这样一种需求，一堆源码看完后，我想画个时序图把思路捋一下，像下面这样：</p><p><img src="/images/pasted-60.png" alt="upload successful"><br>画图的工具有很多，相信大部分小伙伴也都会画。<br>然而，画图太费时间了！！！而且这个图跟我们的代码关联性很大，就是照着代码画的。<br>那么问题就来了，能不能照着代码生成呢？要是能够照着代码生成，岂不是要爽很多。<br>今天松哥就给大家介绍一个我最近在用的 IDEA 插件 SequenceDiagram。</p><span id="more"></span><p>我不是那种收集狂，虽然我的笔记本并不卡，但是对于 IDEA 中安装插件我还是非常慎重的，很少装。不过这个 SequenceDiagram 确实不错，帮了我大忙，因此这里就给大家安利下。</p><ol><li>安装<br>先来时说说安装，IDEA 插件市场直接搜索并安装，这个是基本技能，我就不多说了：</li></ol><p><img src="/images/pasted-61.png" alt="upload successful"><br>装好之后记得重启一下 IDEA。<br>2. 功能<br>再来说说这个插件都有哪些功能？</p><p>生成简单的时序图。<br>通过单击时序图上的文本来导航代码。<br>可以从时序图中删除某一个类。<br>可以将时序图导出为图像。<br>可以将时序图导出为 PlantUML 文件。</p><p>另外还有三个实验性的功能：</p><p>智能界面<br>Lambda 表达式<br>Kotlin 支持</p><ol start="3"><li>用法<br>安装好 SequenceDiagram 之后，我们可以从如下几个地方启用它：</li></ol><p>在导航工具栏中，出现了如下图标（IDEA 左下角）：</p><p><img src="/images/pasted-62.png" alt="upload successful"></p><p>工具菜单中 Tools -&gt; Sequence Diagram</p><p><img src="/images/pasted-63.png" alt="upload successful"></p><p>在编辑器右键菜单中 Sequence Diagram …</p><p><img src="/images/pasted-64.png" alt="upload successful"></p><p>在 IntentionAction 提示中 Generate sequence diagram（光标放在方法名上，按 alt+enter 或者 option+enter）：</p><p><img src="/images/pasted-65.png" alt="upload successful"></p><p>通过这些地方我们可以生成时序图，最终生成的时序图如下：</p><p><img src="/images/pasted-66.png" alt="upload successful"><br>由图中可以清楚的看到方法的调用以及返回过程。<br>这张图中有几个细节，我们分别来看下。<br>先看左边一列按钮。<br>第一个三角是重新生成按钮（不好使，似乎有 BUG）。<br>第二个扳手是设置一些生成的细节，例如方法调用的深度，是否忽略 get/set，是否忽略私有方法/构造方法 等，如下图：</p><p><img src="/images/pasted-67.png" alt="upload successful"><br>下面的都是保存按钮了，可以保存为不同格式，小伙伴们可以自行尝试。<br>再看右边的图。<br>鼠标双击类名/方法名，会跳转到对应的类/方法上。<br>鼠标在类名/方法名上右键单击，可以从图中移除一个类/方法。</p><p><img src="/images/pasted-68.png" alt="upload successful"><br>差不多就这些用法吧，比较简单却很管用的一个插件，感兴趣的小伙伴可以试试哦～</p>]]></content:encoded>
+      
+      
+      <category domain="http://example.com/categories/%E7%BC%96%E7%A8%8B/">编程</category>
+      
+      
+      <category domain="http://example.com/tags/%E6%8A%80%E5%B7%A7%E5%88%86%E4%BA%AB/">技巧分享</category>
+      
+      
+      <comments>http://example.com/2021/11/09/%E5%90%B9%E7%88%86%E8%BF%99%E4%B8%AA%E6%9C%80%E8%BF%91%E5%9C%A8%E7%94%A8%E7%9A%84-IDEA-%E7%A5%9E%E5%99%A8%EF%BC%81/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>摄影-阿刘分享</title>
@@ -135,8 +160,8 @@
     
     <item>
       <title>我是三本学生：社会不是「看不起」我，是「看不见」我</title>
-      <link>http://example.com/2021/11/08/Untitled/</link>
-      <guid>http://example.com/2021/11/08/Untitled/</guid>
+      <link>http://example.com/2021/11/08/%E6%88%91%E6%98%AF%E4%B8%89%E6%9C%AC%E5%AD%A6%E7%94%9F%EF%BC%9A%E7%A4%BE%E4%BC%9A%E4%B8%8D%E6%98%AF%E3%80%8C%E7%9C%8B%E4%B8%8D%E8%B5%B7%E3%80%8D%E6%88%91%EF%BC%8C%E6%98%AF%E3%80%8C%E7%9C%8B%E4%B8%8D%E8%A7%81%E3%80%8D%E6%88%91/</link>
+      <guid>http://example.com/2021/11/08/%E6%88%91%E6%98%AF%E4%B8%89%E6%9C%AC%E5%AD%A6%E7%94%9F%EF%BC%9A%E7%A4%BE%E4%BC%9A%E4%B8%8D%E6%98%AF%E3%80%8C%E7%9C%8B%E4%B8%8D%E8%B5%B7%E3%80%8D%E6%88%91%EF%BC%8C%E6%98%AF%E3%80%8C%E7%9C%8B%E4%B8%8D%E8%A7%81%E3%80%8D%E6%88%91/</guid>
       <pubDate>Mon, 08 Nov 2021 03:10:00 GMT</pubDate>
       
       <description>&lt;p&gt;&lt;img src=&quot;/images/pasted-9.png&quot; alt=&quot;upload successful&quot;&gt;&lt;/p&gt;
@@ -156,14 +181,14 @@
       <category domain="http://example.com/tags/%E4%BA%BA%E7%94%9F%E7%99%BE%E6%80%81/">人生百态</category>
       
       
-      <comments>http://example.com/2021/11/08/Untitled/#disqus_thread</comments>
+      <comments>http://example.com/2021/11/08/%E6%88%91%E6%98%AF%E4%B8%89%E6%9C%AC%E5%AD%A6%E7%94%9F%EF%BC%9A%E7%A4%BE%E4%BC%9A%E4%B8%8D%E6%98%AF%E3%80%8C%E7%9C%8B%E4%B8%8D%E8%B5%B7%E3%80%8D%E6%88%91%EF%BC%8C%E6%98%AF%E3%80%8C%E7%9C%8B%E4%B8%8D%E8%A7%81%E3%80%8D%E6%88%91/#disqus_thread</comments>
       
     </item>
     
     <item>
       <title>面试官问我JVM内存结构，我真的是</title>
-      <link>http://example.com/2021/11/08/hello-world/</link>
-      <guid>http://example.com/2021/11/08/hello-world/</guid>
+      <link>http://example.com/2021/11/08/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%EF%BC%8C%E6%88%91%E7%9C%9F%E7%9A%84%E6%98%AF/</link>
+      <guid>http://example.com/2021/11/08/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%EF%BC%8C%E6%88%91%E7%9C%9F%E7%9A%84%E6%98%AF/</guid>
       <pubDate>Mon, 08 Nov 2021 01:13:00 GMT</pubDate>
       
       <description>&lt;p&gt;&lt;img src=&quot;/images/pasted-8.png&quot; alt=&quot;upload successful&quot;&gt;&lt;br&gt;面试官：今天来聊聊JVM的内存结构吧？&lt;br&gt;候选者：嗯，好的&lt;br&gt;候选者：前几次面试的时候也提到了：class文件会被类加载器装载至JVM中，并且JVM会负责程序「运行时」的「内存管理」&lt;br&gt;候选者：而JVM的内存结构，往往指的就是JVM定义的「运行时数据区域」&lt;br&gt;候选者：简单来说就分为了5大块：方法区、堆、程序计数器、虚拟机栈、本地方法栈&lt;br&gt;候选者：要值得注意的是：这是JVM「规范」的分区概念，到具体的实现落地，不同的厂商实现可能是有所区别的。&lt;br&gt;&lt;/p&gt;</description>
@@ -179,7 +204,7 @@
       <category domain="http://example.com/tags/Java/">Java</category>
       
       
-      <comments>http://example.com/2021/11/08/hello-world/#disqus_thread</comments>
+      <comments>http://example.com/2021/11/08/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%EF%BC%8C%E6%88%91%E7%9C%9F%E7%9A%84%E6%98%AF/#disqus_thread</comments>
       
     </item>
     

@@ -83,6 +83,15 @@
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
+
+  
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;" ></canvas>
+    <script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/js/cursor/explosion.min.js"></script>
+  
+
+
+
   <div class="container use-motion">
     <div class="headband"></div>
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -218,10 +227,10 @@
       <div class="post-body">
           <div class="tag-cloud">
             <div class="tag-cloud-title">
-              目前共计 4 个标签
+              目前共计 5 个标签
             </div>
             <div class="tag-cloud-tags">
-              <a href="/tags/Java/" style="font-size: 12px; color: #ccc">Java</a> <a href="/tags/%E4%BA%BA%E5%83%8F%E6%91%84%E5%BD%B1/" style="font-size: 21px; color: #6f6f6f">人像摄影</a> <a href="/tags/%E4%BA%BA%E7%94%9F%E7%99%BE%E6%80%81/" style="font-size: 30px; color: #111">人生百态</a> <a href="/tags/%E9%A3%8E%E5%85%89%E6%91%84%E5%BD%B1/" style="font-size: 12px; color: #ccc">风光摄影</a>
+              <a href="/tags/Java/" style="font-size: 12px; color: #ccc">Java</a> <a href="/tags/%E4%BA%BA%E5%83%8F%E6%91%84%E5%BD%B1/" style="font-size: 21px; color: #6f6f6f">人像摄影</a> <a href="/tags/%E4%BA%BA%E7%94%9F%E7%99%BE%E6%80%81/" style="font-size: 30px; color: #111">人生百态</a> <a href="/tags/%E6%8A%80%E5%B7%A7%E5%88%86%E4%BA%AB/" style="font-size: 12px; color: #ccc">技巧分享</a> <a href="/tags/%E9%A3%8E%E5%85%89%E6%91%84%E5%BD%B1/" style="font-size: 12px; color: #ccc">风光摄影</a>
             </div>
           </div>
         
@@ -300,7 +309,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -313,7 +322,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -402,6 +411,7 @@ $(document).ready(function() {
        	
 });
 </script> 
+
 
         
 <div class="busuanzi-count">
