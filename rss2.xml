@@ -9,8 +9,31 @@
     <atom:link href="http://example.com/rss2.xml" rel="self" type="application/rss+xml"/>
     
     <description>Stay hungry stay foolish！</description>
-    <pubDate>Tue, 09 Nov 2021 12:23:16 GMT</pubDate>
+    <pubDate>Mon, 22 Nov 2021 14:31:41 GMT</pubDate>
     <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>动物园游记</title>
+      <link>http://example.com/2021/11/22/%E5%8A%A8%E7%89%A9%E5%9B%AD%E6%B8%B8%E8%AE%B0/</link>
+      <guid>http://example.com/2021/11/22/%E5%8A%A8%E7%89%A9%E5%9B%AD%E6%B8%B8%E8%AE%B0/</guid>
+      <pubDate>Mon, 22 Nov 2021 14:28:00 GMT</pubDate>
+      
+      <description>&lt;p&gt;&lt;img src=&quot;/images/pasted-69.png&quot; alt=&quot;upload successful&quot;&gt;&lt;/p&gt;</description>
+      
+      
+      
+      <content:encoded><![CDATA[<p><img src="/images/pasted-69.png" alt="upload successful"></p><span id="more"></span><p><img src="/images/pasted-70.png" alt="upload successful"></p><p><img src="/images/pasted-71.png" alt="upload successful"></p><p><img src="/images/pasted-72.png" alt="upload successful"></p><p><img src="/images/pasted-73.png" alt="upload successful"></p>]]></content:encoded>
+      
+      
+      <category domain="http://example.com/categories/%E6%91%84%E5%BD%B1/">摄影</category>
+      
+      
+      <category domain="http://example.com/tags/%E9%9A%8F%E8%AE%B0/">随记</category>
+      
+      
+      <comments>http://example.com/2021/11/22/%E5%8A%A8%E7%89%A9%E5%9B%AD%E6%B8%B8%E8%AE%B0/#disqus_thread</comments>
+      
+    </item>
     
     <item>
       <title>吹爆这个最近在用的 IDEA 神器！</title>
