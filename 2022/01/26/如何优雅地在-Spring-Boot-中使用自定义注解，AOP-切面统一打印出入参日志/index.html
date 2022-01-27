@@ -19,35 +19,35 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"zhangyuanqian.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="article">
 <meta property="og:title" content="如何优雅地在 Spring Boot 中使用自定义注解，AOP 切面统一打印出入参日志">
-<meta property="og:url" content="http://example.com/2022/01/26/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E5%9C%A8-Spring-Boot-%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8CAOP-%E5%88%87%E9%9D%A2%E7%BB%9F%E4%B8%80%E6%89%93%E5%8D%B0%E5%87%BA%E5%85%A5%E5%8F%82%E6%97%A5%E5%BF%97/index.html">
+<meta property="og:url" content="http://zhangyuanqian.top/2022/01/26/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E5%9C%A8-Spring-Boot-%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8CAOP-%E5%88%87%E9%9D%A2%E7%BB%9F%E4%B8%80%E6%89%93%E5%8D%B0%E5%87%BA%E5%85%A5%E5%8F%82%E6%97%A5%E5%BF%97/index.html">
 <meta property="og:site_name" content="Yuanqian&#39;s Blog">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/pasted-11.png">
-<meta property="og:image" content="http://example.com/images/pasted-12.png">
-<meta property="og:image" content="http://example.com/images/pasted-13.png">
-<meta property="og:image" content="http://example.com/images/pasted-14.png">
-<meta property="og:image" content="http://example.com/images/pasted-15.png">
-<meta property="og:image" content="http://example.com/images/pasted-16.png">
-<meta property="og:image" content="http://example.com/images/pasted-17.png">
-<meta property="og:image" content="http://example.com/images/pasted-18.png">
-<meta property="og:image" content="http://example.com/images/pasted-19.png">
-<meta property="og:image" content="http://example.com/images/pasted-20.png">
-<meta property="og:image" content="http://example.com/images/pasted-21.png">
-<meta property="og:image" content="http://example.com/images/pasted-22.png">
-<meta property="og:image" content="http://example.com/images/pasted-23.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-11.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-12.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-13.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-14.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-15.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-16.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-17.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-18.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-19.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-20.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-21.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-22.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-23.png">
 <meta property="article:published_time" content="2022-01-26T02:24:00.000Z">
 <meta property="article:modified_time" content="2022-01-26T03:07:22.959Z">
 <meta property="article:author" content="Rex Y Zhang">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/pasted-11.png">
+<meta name="twitter:image" content="http://zhangyuanqian.top/images/pasted-11.png">
 
-<link rel="canonical" href="http://example.com/2022/01/26/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E5%9C%A8-Spring-Boot-%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8CAOP-%E5%88%87%E9%9D%A2%E7%BB%9F%E4%B8%80%E6%89%93%E5%8D%B0%E5%87%BA%E5%85%A5%E5%8F%82%E6%97%A5%E5%BF%97/">
+<link rel="canonical" href="http://zhangyuanqian.top/2022/01/26/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E5%9C%A8-Spring-Boot-%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8CAOP-%E5%88%87%E9%9D%A2%E7%BB%9F%E4%B8%80%E6%89%93%E5%8D%B0%E5%87%BA%E5%85%A5%E5%8F%82%E6%97%A5%E5%BF%97/">
 
 
 <script id="page-configurations">
@@ -217,7 +217,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/26/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E5%9C%A8-Spring-Boot-%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8CAOP-%E5%88%87%E9%9D%A2%E7%BB%9F%E4%B8%80%E6%89%93%E5%8D%B0%E5%87%BA%E5%85%A5%E5%8F%82%E6%97%A5%E5%BF%97/">
+    <link itemprop="mainEntityOfPage" href="http://zhangyuanqian.top/2022/01/26/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E5%9C%A8-Spring-Boot-%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8CAOP-%E5%88%87%E9%9D%A2%E7%BB%9F%E4%B8%80%E6%89%93%E5%8D%B0%E5%87%BA%E5%85%A5%E5%8F%82%E6%97%A5%E5%BF%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -391,7 +391,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2022/01/26/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E5%9C%A8-Spring-Boot-%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8CAOP-%E5%88%87%E9%9D%A2%E7%BB%9F%E4%B8%80%E6%89%93%E5%8D%B0%E5%87%BA%E5%85%A5%E5%8F%82%E6%97%A5%E5%BF%97/" title="如何优雅地在 Spring Boot 中使用自定义注解，AOP 切面统一打印出入参日志">http://example.com/2022/01/26/如何优雅地在-Spring-Boot-中使用自定义注解，AOP-切面统一打印出入参日志/</a>
+    <a href="http://zhangyuanqian.top/2022/01/26/%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E5%9C%A8-Spring-Boot-%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3%EF%BC%8CAOP-%E5%88%87%E9%9D%A2%E7%BB%9F%E4%B8%80%E6%89%93%E5%8D%B0%E5%87%BA%E5%85%A5%E5%8F%82%E6%97%A5%E5%BF%97/" title="如何优雅地在 Spring Boot 中使用自定义注解，AOP 切面统一打印出入参日志">http://zhangyuanqian.top/2022/01/26/如何优雅地在-Spring-Boot-中使用自定义注解，AOP-切面统一打印出入参日志/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
