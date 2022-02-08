@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>资深开发竟然不清楚int(1)和int(10)的区别</title>
+      <link href="/2022/02/08/%E8%B5%84%E6%B7%B1%E5%BC%80%E5%8F%91%E7%AB%9F%E7%84%B6%E4%B8%8D%E6%B8%85%E6%A5%9Aint-1-%E5%92%8Cint-10-%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
+      <url>/2022/02/08/%E8%B5%84%E6%B7%B1%E5%BC%80%E5%8F%91%E7%AB%9F%E7%84%B6%E4%B8%8D%E6%B8%85%E6%A5%9Aint-1-%E5%92%8Cint-10-%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/pasted-28.png" alt="upload successful"></p><span id="more"></span><h3 id="困惑"><a href="#困惑" class="headerlink" title="困惑"></a>困惑</h3><hr><p>最近遇到个问题，有个表的要加个user_id字段，user_id字段可能很大，于是我提mysql工单<table><tr><td bgcolor="#FF4500">alter table xxx ADD user_id int(1)。</td></tr></table>领导看到我的sql工单，于是说：这int(1)怕是不够用吧，接下来是一通解释。<br><br>其实这不是我第一次遇到这样的问题了，其中不乏有工作5年以上的老司机。包括我经常在也看到同事也一直使用int(10)，感觉用了int(1)，字段的上限就被限制，真实情况肯定不是这样。<br></p><h3 id="数据说话"><a href="#数据说话" class="headerlink" title="数据说话"></a>数据说话</h3><hr><p>我们知道在mysql中 int占4个字节，那么对于无符号的int，最大值是2^32-1 = 4294967295，将近40亿，难道用了int(1)，就不能达到这个最大值吗？<br></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `user` (</span><br><span class="line">  `id` int(1) unsigned NOT NULL AUTO_INCREMENT,</span><br><span class="line">   PRIMARY KEY (`id`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>id字段为无符号的int(1)，我来插入一个最大值看看。<br></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; INSERT INTO `user` (`id`) VALUES (4294967295);</span><br><span class="line">Query OK, 1 row affected (0.00 sec)</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>可以看到成功了，说明int后面的数字，不影响int本身支持的大小，int(1)、int(2)…int(10)没什么区别。<br></p><h3 id="零填充"><a href="#零填充" class="headerlink" title="零填充"></a>零填充</h3><hr><p>一般int后面的数字，配合zerofill一起使用才有效。先看个例子：<br></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `user` (</span><br><span class="line">  `id` int(4) unsigned zerofill NOT NULL AUTO_INCREMENT,</span><br><span class="line">   PRIMARY KEY (`id`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>注意int(4)后面加了个zerofill，我们先来插入4条数据。<br></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; INSERT INTO `user` (`id`) VALUES (1),(10),(100),(1000);</span><br><span class="line">Query OK, 4 rows affected (0.00 sec)</span><br><span class="line">Records: 4  Duplicates: 0  Warnings: 0</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>分别插入1、10、100、1000 4条数据，然后我们来查询下：<br></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from user;</span><br><span class="line">+------+</span><br><span class="line">| id   |</span><br><span class="line">+------+</span><br><span class="line">| 0001 |</span><br><span class="line">| 0010 |</span><br><span class="line">| 0100 |</span><br><span class="line">| 1000 |</span><br><span class="line">+------+</span><br><span class="line">4 rows in set (0.00 sec)</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>通过数据可以发现 int(4) + zerofill实现了不足4位补0的现象，单单int(4)是没有用的。 而且对于0001这种，底层存储的还是1，只是在展示的会补0。<br></p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><hr><p>int后面的数字不能表示字段的长度，int(num)一般加上zerofill，才有效果。zerofill的作用一般可以用在一些编号相关的数字中，比如学生的编号 001 002 … 999这种，如果mysql没有零填充的功能，但是你又要格式化输出等长的数字编号时，那么你只能自己处理了。<br><br><img src="/images/pasted-29.png" alt="upload successful"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 编程 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> MySQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Linux 使用 Vsftpd 搭建 FTP 服务</title>
       <link href="/2022/01/27/Linux-%E4%BD%BF%E7%94%A8-Vsftpd-%E6%90%AD%E5%BB%BA-FTP-%E6%9C%8D%E5%8A%A1/"/>
       <url>/2022/01/27/Linux-%E4%BD%BF%E7%94%A8-Vsftpd-%E6%90%AD%E5%BB%BA-FTP-%E6%9C%8D%E5%8A%A1/</url>
