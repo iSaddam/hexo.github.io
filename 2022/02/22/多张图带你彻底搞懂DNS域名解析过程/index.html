@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhangyuanqian.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="article">
+<meta property="og:title" content="多张图带你彻底搞懂DNS域名解析过程">
+<meta property="og:url" content="http://zhangyuanqian.top/2022/02/22/%E5%A4%9A%E5%BC%A0%E5%9B%BE%E5%B8%A6%E4%BD%A0%E5%BD%BB%E5%BA%95%E6%90%9E%E6%87%82DNS%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Yuanqian&#39;s Blog">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-38.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-39.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-40.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-41.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-42.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-43.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-44.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-45.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-46.png">
+<meta property="article:published_time" content="2022-02-22T01:59:00.000Z">
+<meta property="article:modified_time" content="2022-02-22T02:25:34.318Z">
+<meta property="article:author" content="Rex Y Zhang">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://zhangyuanqian.top/images/pasted-38.png">
+
+<link rel="canonical" href="http://zhangyuanqian.top/2022/02/22/%E5%A4%9A%E5%BC%A0%E5%9B%BE%E5%B8%A6%E4%BD%A0%E5%BD%BB%E5%BA%95%E6%90%9E%E6%87%82DNS%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>多张图带你彻底搞懂DNS域名解析过程 | Yuanqian's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/rss2.xml" title="Yuanqian's Blog" type="application/rss+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+  
+    <script src="/js/cursor/fireworks.js"></script>
+  
+
+
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Yuanqian's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/iSaddam" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhangyuanqian.top/2022/02/22/%E5%A4%9A%E5%BC%A0%E5%9B%BE%E5%B8%A6%E4%BD%A0%E5%BD%BB%E5%BA%95%E6%90%9E%E6%87%82DNS%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Rex Y Zhang">
+      <meta itemprop="description" content="Stay hungry stay foolish！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yuanqian's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          多张图带你彻底搞懂DNS域名解析过程
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-02-22 09:59:00 / 修改时间：10:25:34" itemprop="dateCreated datePublished" datetime="2022-02-22T09:59:00+08:00">2022-02-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><img src="/images/pasted-38.png" alt="upload successful"></p>
+<span id="more"></span>
+<h4 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h4><hr>
+<p>DNS（Domain Name System）是域名系统的英文缩写，是一种组织成域层次结构的计算机和网络服务命名系统，用于 TCP/IP 网络。</p>
+<h4 id="域名系统DNS-的作用"><a href="#域名系统DNS-的作用" class="headerlink" title="域名系统DNS 的作用"></a>域名系统DNS 的作用</h4><hr>
+<p>通常我们有两种方式识别主机：通过主机名或者 IP 地址。人们喜欢便于记忆的主机名表示，而路由器则喜欢定长的、有着层次结构的 IP 地址。为了满足这些不同的偏好，我们就需要一种能够进行主机名到IP 地址转换的目录服务，域名系统作为将域名和 IP 地址相互映射的一个分布式数据库，能够使人更方便地访问互联网。<br><br>因此，即使不使用域名也可以通过IP地址来寻址目的主机，但域名与IP地址相比，便于人们记忆。因此对于大多数网络应用，我们一般使用域名来访问目的主机，而不是直接使用IP地址来访问。<br><br>对于本例，简单来说，当我们在浏览器地址栏中输入某个Web服务器的域名时。用户主机首先用户主机会首先在自己的DNS高速缓存中查找该域名所应的IP地址。<br></p>
+<p><img src="/images/pasted-39.png" alt="upload successful"><br>如果没有找到，则会向网络中的某台DNS服务器查询，DNS服务器中有域名和IP地映射关系的数据库。当DNS服务器收到DNS查询报文后，在其数据库中查询，之后将查询结果发送给用户主机。<br><br><img src="/images/pasted-40.png" alt="upload successful"></p>
+<p>现在，用户主机中的浏览器可以通过Web服务器的IP地址对其进行访问了。<br></p>
+<p><img src="/images/pasted-41.png" alt="upload successful"></p>
+<h4 id="域名的层级关系"><a href="#域名的层级关系" class="headerlink" title="域名的层级关系"></a>域名的层级关系</h4><hr>
+<h5 id="层级关系特点"><a href="#层级关系特点" class="headerlink" title="层级关系特点"></a>层级关系特点</h5><ul>
+<li>因特网采用层次树状结构的域名结构</li>
+<li>域名的结构由若干个分量组成，各分量之间用“点”隔开，分别代表不同级别的域名。<ul>
+<li>每一级的域名都由英文字母和数字组成，不超过63个字符，不区分大小写字母。</li>
+<li>级别最低的域名写在最左边，而级别最高的顶级域名写在最右边。</li>
+<li>完整的域名不超过255个字符。</li>
+</ul>
+</li>
+<li>域名系统既不规定一个域名需要包含多少个下级域名，也不规定每一级的域名代表什么意思。</li>
+<li>各级域名由其上一级的域名管理机构管理，而最高的顶级域名则由因特网名称与数字地址分配机构ICANN进行管理。</li>
+</ul>
+<h5 id="因特网的域名空间"><a href="#因特网的域名空间" class="headerlink" title="因特网的域名空间"></a>因特网的域名空间</h5><p><img src="/images/pasted-42.png" alt="upload successful"></p>
+<p>上图展示了 DNS 服务器的部分层次结构，从上到下依次为根域名服务器、顶级域名服务器和权威域名服务器。域名和IP地址的映射关系必须保存在域名服务器中，供所有其他应用查询。显然不能将所有信息都储存在一台域名服务器中。DNS使用分布在各地的域名服务器来实现域名到IP地址的转换。<br></p>
+<h5 id="域名服务器可以划分为以下四种不同的类型"><a href="#域名服务器可以划分为以下四种不同的类型" class="headerlink" title="域名服务器可以划分为以下四种不同的类型:"></a>域名服务器可以划分为以下四种不同的类型:</h5><ul>
+<li>根域名服务器：根域名服务器是最高层次的域名服务器。每个根域名服务器都知道所有的顶级域名服务器的域名及其IP地址。因特网上共有13个不同IP地址的根域名服务器。当本地域名服务器向根域名服务器发出查询请求时，路由器就把查询请求报文转发到离这个DNS客户最近的一个根域名服务器。这就加快了DNS的查询过程，同时也更合理地利用了因特网的资源。</li>
+<li>顶级域名服务器：这些域名服务器负责管理在该顶级域名服务器注册的所有二级域名。当收到DNS查询请求时就给出相应的回答（可能是最后的结果，也可能是下一级权限域名服务器的IP地址)。</li>
+<li>权限域名服务器：这些域名服务器负责管理某个区的域名。每一个主机的域名都必须在某个权限域名服务器处注册登记。因此权限域名服务器知道其管辖的域名与IP地址的映射关系。另外，权限域名服务器还知道其下级域名服务器的地址。</li>
+<li>本地域名服务器：本地域名服务器不属于上述的域名服务器的等级结构。当一个主机发出DNS请求报文时，这个报文就首先被送往该主机的本地域名服务器。本地域名服务器起着代理的作用，会将该报文转发到上述的域名服务器的等级结构中。本地域名服务器离用户较近，一般不超过几个路由器的距离，也有可能就在同一个局域网中。本地域名服务器的IP地址需要直接配置在需要域名解析的主机中。</li>
+</ul>
+<h4 id="DNS-域名解析过程"><a href="#DNS-域名解析过程" class="headerlink" title="DNS 域名解析过程"></a>DNS 域名解析过程</h4><hr>
+<p>域名解析包含两种查询方式，分别是递归查询和迭代查询。</p>
+<h5 id="递归查询"><a href="#递归查询" class="headerlink" title="递归查询"></a>递归查询</h5><p>如果主机所询问的本地域名服务器不知道被查询域名的 IP 地址，那么本地域名服务器就以 DNS 客户端的身份，向其他根域名服务器继续发出查询请求报文，即替主机继续查询，而不是让主机自己进行下一步查询。<br><br>我们以一个例子来了解DNS递归查询的工作原理，假设图中的主机 (IP地址为m.xyz.com) 想知道域名y.abc.com的IP地址。<br></p>
+<ul>
+<li>1、我们以一个例子来了解DNS递归查询的工作原理，假设图中的主机 (IP地址为m.xyz.com) 想知道域名y.abc.com的IP地址。</li>
+<li>2、本地域名服务器收到递归查询的委托后，也采用递归查询的方式向某个根域名服务器查询。</li>
+<li>3、根域名服务器收到递归查询的委托后，也采用递归查询的方式向某个顶级域名服务器查询。</li>
+<li>4、顶级域名服务器收到递归查询的委托后，也采用递归查询的方式向某个权限域名服务器查询。</li>
+</ul>
+<p>过程如图所示：</p>
+<p><img src="/images/pasted-43.png" alt="upload successful"></p>
+<p>当查询到域名对应的IP地址后，查询结果会在之前受委托的各域名服务器之间传递，最终传回给用户主机。</p>
+<p>过程如图所示：</p>
+<p><img src="/images/pasted-44.png" alt="upload successful"></p>
+<h5 id="迭代查询"><a href="#迭代查询" class="headerlink" title="迭代查询"></a>迭代查询</h5><p>当根域名服务器收到本地域名服务器发出的迭代查询请求报文时，要么给出所要查询的IP 地址，要么告诉本地服务器下一步应该找哪个域名服务器进行查询，然后让本地服务器进行后续的查询。<br></p>
+<p>迭代查询过程如下：<br></p>
+<ul>
+<li>1、主机首先向其本地域名服务器进行递归查询。</li>
+<li>2、本地域名服务器采用迭代查询，它先向某个根域名服务器查询。</li>
+<li>3、根域名服务器告诉本地域名服务器，下一次应查询的顶级域名服务器的IP地址。</li>
+<li>4、本地域名服务器向顶级域名服务器进行迭代查询。</li>
+<li>5、顶级域名服务器告诉本地域名服务器，下一次应查询的权限域名服务器的IP地址。</li>
+<li>6、本地域名服务器向权限域名服务器进行迭代查询。</li>
+<li>7、权限域名服务器告诉本地域名服务器所查询的域名的IP地址。</li>
+<li>8、本地域名服务器最后把查询的结果告诉主机。</li>
+</ul>
+<p>过程如图所示：</p>
+<p><img src="/images/pasted-45.png" alt="upload successful"></p>
+<p>由于递归查询对于被查询的域名服务器负担太大，通常采用以下模式：从请求主机到本地域名服务器的查询是递归查询，而其余的查询是迭代查询。</p>
+<h4 id="高速缓存"><a href="#高速缓存" class="headerlink" title="高速缓存"></a>高速缓存</h4><hr>
+<p>为了提高DNS的查询效率，并减轻根域名服务器的负荷和减少因特网上的DNS查询报文数量，在域名服务器中广泛地使用了高速缓存。高速缓存用来存放最近查询过的域名以及从何处获得域名映射信息的记录。<br></p>
+<p>由于域名到IP地址的映射关系并不是永久不变，为保持高速缓存中的内容正确，域名服务器应为每项内容设置计时器并删除超过合理时间的项（例如，每个项目只存放两天)。<br></p>
+<p>不但在本地域名服务器中需要高速缓存，在用户主机中也很需要。许多用户主机在启动时从本地域名服务器下载域名和IP地址的全部数据库，维护存放自己最近使用的域名的高速缓存，并且只在从缓存中找不到域名时才向域名服务器查询。同理，主机也需要保持高速缓存中内容的正确性。<br></p>
+<p>如图所示：</p>
+<p><img src="/images/pasted-46.png" alt="upload successful"></p>
+<p>如果本地域名服务器不久前已经有用户查询过域名为y.abc.com的IP地址，则本地域名服务器的高速缓存中应该存有该域名对应的IP地址。因此，直接把高速缓存中存放的上次查询结果(即y.abc.com的IP地址)告诉用户。</p>
+<h4 id="DNS相关面试问题"><a href="#DNS相关面试问题" class="headerlink" title="DNS相关面试问题"></a>DNS相关面试问题</h4><hr>
+<h5 id="DNS为什么用UDP？"><a href="#DNS为什么用UDP？" class="headerlink" title="DNS为什么用UDP？"></a>DNS为什么用UDP？</h5><p>更正确的答案是 DNS 既使用 TCP 又使用 UDP。当进行区域传送（主域名服务器向辅助域名服务器传送变化的那部分数据）时会使用 TCP，因为数据同步传送的数据量比一个请求和应答的数据量要多，而 TCP 允许的报文长度更长，因此为了保证数据的正确性，会使用基于可靠连接的 TCP。<br></p>
+<p>当客户端向 DNS 服务器查询域名 ( 域名解析) 的时候，一般返回的内容不会超过 UDP 报文的最大长度，即 512 字节。用 UDP 传输时，不需要经过 TCP 三次握手的过程，从而大大提高了响应速度，但这要求域名解析器和域名服务器都必须自己处理超时和重传从而保证可靠性。<br></p>
+<h5 id="递归查询和递归查询区别？"><a href="#递归查询和递归查询区别？" class="headerlink" title="递归查询和递归查询区别？"></a>递归查询和递归查询区别？</h5><p>递归查询: 如果主机所询问的本地域名服务器不知道被查询域名的 IP 地址，那么本地域名服务器就以 DNS 客户端的身份，向其他根域名服务器继续发出查询请求报文，即替主机继续查询，而不是让主机自己进行下一步查询。<br></p>
+<p>迭代查询： 当根域名服务器收到本地域名服务器发出的迭代查询请求报文时，要么给出所要查询的IP 地址，要么告诉本地服务器下一步应该找哪个域名服务器进行查询，然后让本地服务器进行后续的查询。<br></p>
+<h5 id="讲讲DNS解析过程？"><a href="#讲讲DNS解析过程？" class="headerlink" title="讲讲DNS解析过程？"></a>讲讲DNS解析过程？</h5><p>详细解析过程请看上文DNS域名解析过程，这里我们做一个总结：<br></p>
+<p>浏览器缓存——》系统hosts文件——》本地DNS解析器缓存——》本地域名服务器（本地配置区域资源、本地域名服务器缓存)——》根域名服务器——》主域名服务器——》下一级域名域名服务器 客户端——》本地域名服务器（递归查询) 本地域名服务器—》DNS服务器的交互查询是迭代查询</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>部分文章转载自其他网站，感谢原作者。</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Rex Y Zhang 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Rex Y Zhang 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Rex Y Zhang
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhangyuanqian.top/2022/02/22/%E5%A4%9A%E5%BC%A0%E5%9B%BE%E5%B8%A6%E4%BD%A0%E5%BD%BB%E5%BA%95%E6%90%9E%E6%87%82DNS%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B/" title="多张图带你彻底搞懂DNS域名解析过程">http://zhangyuanqian.top/2022/02/22/多张图带你彻底搞懂DNS域名解析过程/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/wechat_channel.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag"># 网络</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/10/JDK15%E6%96%B0%E7%89%B9%E6%80%A7%E4%BD%93%E9%AA%8C/" rel="prev" title="JDK15新特性体验">
+      <i class="fa fa-chevron-left"></i> JDK15新特性体验
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#DNS"><span class="nav-number">1.</span> <span class="nav-text">DNS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9FDNS-%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">域名系统DNS 的作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E7%9A%84%E5%B1%82%E7%BA%A7%E5%85%B3%E7%B3%BB"><span class="nav-number">3.</span> <span class="nav-text">域名的层级关系</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B1%82%E7%BA%A7%E5%85%B3%E7%B3%BB%E7%89%B9%E7%82%B9"><span class="nav-number">3.1.</span> <span class="nav-text">层级关系特点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9B%A0%E7%89%B9%E7%BD%91%E7%9A%84%E5%9F%9F%E5%90%8D%E7%A9%BA%E9%97%B4"><span class="nav-number">3.2.</span> <span class="nav-text">因特网的域名空间</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%AF%E4%BB%A5%E5%88%92%E5%88%86%E4%B8%BA%E4%BB%A5%E4%B8%8B%E5%9B%9B%E7%A7%8D%E4%B8%8D%E5%90%8C%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.3.</span> <span class="nav-text">域名服务器可以划分为以下四种不同的类型:</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DNS-%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">DNS 域名解析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2"><span class="nav-number">4.1.</span> <span class="nav-text">递归查询</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%AD%E4%BB%A3%E6%9F%A5%E8%AF%A2"><span class="nav-number">4.2.</span> <span class="nav-text">迭代查询</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E9%80%9F%E7%BC%93%E5%AD%98"><span class="nav-number">5.</span> <span class="nav-text">高速缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DNS%E7%9B%B8%E5%85%B3%E9%9D%A2%E8%AF%95%E9%97%AE%E9%A2%98"><span class="nav-number">6.</span> <span class="nav-text">DNS相关面试问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#DNS%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8UDP%EF%BC%9F"><span class="nav-number">6.1.</span> <span class="nav-text">DNS为什么用UDP？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2%E5%92%8C%E9%80%92%E5%BD%92%E6%9F%A5%E8%AF%A2%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">6.2.</span> <span class="nav-text">递归查询和递归查询区别？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%AE%B2%E8%AE%B2DNS%E8%A7%A3%E6%9E%90%E8%BF%87%E7%A8%8B%EF%BC%9F"><span class="nav-number">6.3.</span> <span class="nav-text">讲讲DNS解析过程？</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Rex Y Zhang"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Rex Y Zhang</p>
+  <div class="site-description" itemprop="description">Stay hungry stay foolish！</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/iSaddam" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;iSaddam" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:aijobs@hotmail.com" title="E-Mail → mailto:aijobs@hotmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      链接网站
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://juejin.cn/" title="https:&#x2F;&#x2F;juejin.cn&#x2F;" rel="noopener" target="_blank">掘金</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://storyfm.cn/" title="https:&#x2F;&#x2F;storyfm.cn&#x2F;" rel="noopener" target="_blank">故事FM</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.fengniao.com/" title="http:&#x2F;&#x2F;www.fengniao.com&#x2F;" rel="noopener" target="_blank">蜂鸟网</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2021 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rex Y Zhang</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
