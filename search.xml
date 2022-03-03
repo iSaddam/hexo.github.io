@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Redis 究竟是单线程还是多线程呢？</title>
+      <link href="/2022/03/01/Redis-%E7%A9%B6%E7%AB%9F%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E6%98%AF%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%91%A2%EF%BC%9F/"/>
+      <url>/2022/03/01/Redis-%E7%A9%B6%E7%AB%9F%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E6%98%AF%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%91%A2%EF%BC%9F/</url>
+      
+        <content type="html"><![CDATA[<p><img src="/images/pasted-55.png" alt="upload successful"><br>Redis一直以来都是高性能分布式缓存中间件的代表，我们经常说Redis是单线程的，也有人说Redis在6.0版本采用了多线程，那么Redis到底是采用单线程呢？还是多线程？本文我们来一探究竟</p><span id="more"></span><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>Redis到底是单线程还是多线程的？<br></p><p>首先，Redis是一个高性能的分布式缓存中间件。其复杂性不言而喻，对于Redis整体而言肯定不是只有一个线程。<br></p><p>我们常说的Redis 是单线程，主要是指 Redis 在网络 IO和键值对读写是采用一个线程来完成的，这也是 Redis 对外提供键值存储服务的核心流程。但对于 Redis 的其他功能来说，比如持久化、异步删除、集群数据同步等，其实都是由额外的线程执行的。<br></p><h4 id="为什么要融入多线程？"><a href="#为什么要融入多线程？" class="headerlink" title="为什么要融入多线程？"></a>为什么要融入多线程？</h4><p>单线程的优势：</p><ul><li>使用单线程可以避免频繁的上下文切换</li><li>Redis 中有各种类型的数据操作，甚至包括一些事务处理，如果采用多线程，还可能因为加锁导致软件复杂度提升，更有可能会因为加解锁，甚至出现死锁，造成的性能损耗，所以使用单线程反而性能会更好</li></ul><p>单线程的劣势：</p><ul><li>无法发挥多核CPU的优势</li><li>当删除大建，会导致服务阻塞</li><li>QPS达到瓶颈</li></ul><p>基于上诉劣势，Redis也进行了相关优化，在4.0版本和6.0版本分别引入了Lazy Free和多线程IO。</p><h4 id="Redis单线程模型"><a href="#Redis单线程模型" class="headerlink" title="Redis单线程模型"></a>Redis单线程模型</h4><p>Redis基于Reactor模式开发了网络事件处理器，这个处理器被称为文件事件处理器。<br></p><p>文件事件处理器的四个重要组成部分：<br></p><ul><li>多个套接字请求</li><li>IO多路复用器</li><li>文件事件派发器</li><li>事件处理器</li></ul><p>Redis客户端对服务端的每次调用都经历了发送命令，执行命令，返回结果三个过程。其中执行命令阶段，由于Redis是单线程来处理命令的，所有每一条到达服务端的命令不会立刻执行，所有的命令都会进入一个队列中，然后逐个被执行。并且多个客户端发送的命令的执行顺序是不确定的。但是可以确定的是不会有两条命令被同时执行，不会产生并发问题，这就是Redis的单线程基本模型，如下图所示。<br></p><p><img src="/images/pasted-56.png" alt="upload successful"></p><h4 id="带你理解Redis处理流程"><a href="#带你理解Redis处理流程" class="headerlink" title="带你理解Redis处理流程"></a>带你理解Redis处理流程</h4><h5 id="Redis-4-0之前的事件处理流程"><a href="#Redis-4-0之前的事件处理流程" class="headerlink" title="Redis 4.0之前的事件处理流程"></a>Redis 4.0之前的事件处理流程</h5><p>我们先介绍一下Redis（ 4.0之前）的执行原理，我们通过IO多路复用器监听来自客户端的socket网络连接，然后由主线程进行IO请求的处理以及命令的处理，所有操作都是线性的，我们可以抽象的理解为下图。<br></p><p><img src="/images/pasted-57.png" alt="upload successful"></p><h5 id="Redis-4-0-之后加入Lazy-Free机制"><a href="#Redis-4-0-之后加入Lazy-Free机制" class="headerlink" title="Redis 4.0 之后加入Lazy Free机制"></a>Redis 4.0 之后加入Lazy Free机制</h5><p>Redis 4.0 之前在处理客户端命令和IO操作时都是以单线程形式运行，期间不会响应其他客户端请求，但若客户端向Redis发送一条耗时较长的命令，比如删除一个含有上百万对象的Set键，或者执行flushdb，flushall操作，Redis服务器需要回收大量的内存空间，这事就会导致Redis服务阻塞，对于负载较高的缓存系统来说将会是个灾难。为了解决这个问题，在Redis 4.0版本引入了Lazy Free，目的是将慢操作异步化，这也是在事件处理上向多线程迈进了一步，其过程我们可以理解为下图。</p><p><img src="/images/pasted-58.png" alt="upload successful"></p><h5 id="Redis-6-0-之后将网络IO异步化"><a href="#Redis-6-0-之后将网络IO异步化" class="headerlink" title="Redis 6.0 之后将网络IO异步化"></a>Redis 6.0 之后将网络IO异步化</h5><p>从以上的发展历程中，我们也能看出Redis 的瓶颈并不在CPU上，即使是单线程Redis也能做到很快的响应，除非是遇到个别极其耗时的命令，这一块我们的Redis也在4.0版本做出了优化，但是我们是不是能更进一步优化Redis呢？从上图中我们可以看出主线程不光处理大量的命令，还需要处理大量的网络IO，Redis6.0就是基于此，将IO操作交由其他线程处理，抽象的理解如下图所示。</p><p><img src="/images/pasted-69.png" alt="upload successful"></p><p>Redis6.0的多线程默认是禁用的，只使用主线程。如需开启需要修改redis.conf配置文件：io-threads-do-reads yes <br></p><p>开启多线程后，还需要设置线程数，否则是不生效的。<br></p><p>线程数一定要小于机器核数。线程数并不是越大越好，官方认为超过了 8 个基本就没什么意义了。<br></p><p>设置线程数，修改redis.conf配置文件： io-threads <br></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 编程 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数据库 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>如何应对数据库缓存双写一致性问题</title>
       <link href="/2022/02/24/%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E7%BC%93%E5%AD%98%E5%8F%8C%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/"/>
       <url>/2022/02/24/%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E7%BC%93%E5%AD%98%E5%8F%8C%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/</url>
