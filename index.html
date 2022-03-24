@@ -201,6 +201,85 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhangyuanqian.top/2022/03/24/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91%EF%BC%9A%E4%BA%86%E8%A7%A3Redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%E5%90%97%EF%BC%9F7%E5%BC%A0%E5%9B%BE%E8%AF%A6%E8%A7%A3%EF%BC%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Rex Y Zhang">
+      <meta itemprop="description" content="Stay hungry stay foolish！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yuanqian's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/24/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91%EF%BC%9A%E4%BA%86%E8%A7%A3Redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%E5%90%97%EF%BC%9F7%E5%BC%A0%E5%9B%BE%E8%AF%A6%E8%A7%A3%EF%BC%81/" class="post-title-link" itemprop="url">面试官问我：了解Redis哨兵机制吗？7张图详解！</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-24 09:26:00 / 修改时间：09:38:48" itemprop="dateCreated datePublished" datetime="2022-03-24T09:26:00+08:00">2022-03-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="先聊聊什么是哨兵机制"><a href="#先聊聊什么是哨兵机制" class="headerlink" title="先聊聊什么是哨兵机制?"></a>先聊聊什么是哨兵机制?</h4><p>Redis的哨兵(sentinel) 系统用于管理多个 Redis 服务器,该系统执行以下三个任务:<br></p>
+<p><strong>监控(Monitoring)：</strong> 哨兵(sentinel) 会不断地检查你的Master和Slave是否运作正常。<br></p>
+<p><strong>提醒(Notification)：</strong> 当被监控的某个 Redis出现问题时, 哨兵(sentinel) 可以通过 API 向管理员或者其他应用程序发送通知。<br></p>
+<p><strong>自动故障迁移(Automatic failover)：</strong> 当一个Master不能正常工作时，哨兵(sentinel) 会开始一次自动故障迁移操作,它会将失效Master的其中一个Slave升级为新的Master, 并让失效Master的其他Slave改为复制新的Master; 当客户端试图连接失效的Master时,集群也会向客户端返回新Master的地址,使得集群可以使用Master代替失效Master。<br></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/24/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91%EF%BC%9A%E4%BA%86%E8%A7%A3Redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%E5%90%97%EF%BC%9F7%E5%BC%A0%E5%9B%BE%E8%AF%A6%E8%A7%A3%EF%BC%81/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://zhangyuanqian.top/2022/03/01/Redis-%E7%A9%B6%E7%AB%9F%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E6%98%AF%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%91%A2%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -881,83 +960,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://zhangyuanqian.top/2022/01/25/Markdown-%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Rex Y Zhang">
-      <meta itemprop="description" content="Stay hungry stay foolish！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yuanqian's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/25/Markdown-%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/" class="post-title-link" itemprop="url">Markdown 常用语法</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-01-25 09:32:00 / 修改时间：11:16:09" itemprop="dateCreated datePublished" datetime="2022-01-25T09:32:00+08:00">2022-01-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="/images/pasted-10.png" alt="upload successful"></p>
-<p>Markdown 的语法全由一些符号所组成，易读易写。本文主要分享我平时经常使用到的 Markdown 语法。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/25/Markdown-%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1029,7 +1031,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1042,7 +1044,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

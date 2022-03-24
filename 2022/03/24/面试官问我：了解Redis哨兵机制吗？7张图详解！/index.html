@@ -22,26 +22,28 @@
     var CONFIG = {"hostname":"zhangyuanqian.top","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Redis一直以来都是高性能分布式缓存中间件的代表，我们经常说Redis是单线程的，也有人说Redis在6.0版本采用了多线程，那么Redis到底是采用单线程呢？还是多线程？本文我们来一探究竟">
+  <meta name="description" content="先聊聊什么是哨兵机制?Redis的哨兵(sentinel) 系统用于管理多个 Redis 服务器,该系统执行以下三个任务: 监控(Monitoring)： 哨兵(sentinel) 会不断地检查你的Master和Slave是否运作正常。 提醒(Notification)： 当被监控的某个 Redis出现问题时, 哨兵(sentinel) 可以通过 API 向管理员或者其他应用程序发送通知。 自动故">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis 究竟是单线程还是多线程呢？">
-<meta property="og:url" content="http://zhangyuanqian.top/2022/03/01/Redis-%E7%A9%B6%E7%AB%9F%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E6%98%AF%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%91%A2%EF%BC%9F/index.html">
+<meta property="og:title" content="面试官问我：了解Redis哨兵机制吗？7张图详解！">
+<meta property="og:url" content="http://zhangyuanqian.top/2022/03/24/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91%EF%BC%9A%E4%BA%86%E8%A7%A3Redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%E5%90%97%EF%BC%9F7%E5%BC%A0%E5%9B%BE%E8%AF%A6%E8%A7%A3%EF%BC%81/index.html">
 <meta property="og:site_name" content="Yuanqian&#39;s Blog">
-<meta property="og:description" content="Redis一直以来都是高性能分布式缓存中间件的代表，我们经常说Redis是单线程的，也有人说Redis在6.0版本采用了多线程，那么Redis到底是采用单线程呢？还是多线程？本文我们来一探究竟">
+<meta property="og:description" content="先聊聊什么是哨兵机制?Redis的哨兵(sentinel) 系统用于管理多个 Redis 服务器,该系统执行以下三个任务: 监控(Monitoring)： 哨兵(sentinel) 会不断地检查你的Master和Slave是否运作正常。 提醒(Notification)： 当被监控的某个 Redis出现问题时, 哨兵(sentinel) 可以通过 API 向管理员或者其他应用程序发送通知。 自动故">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-55.png">
-<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-56.png">
-<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-57.png">
-<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-58.png">
-<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-69.png">
-<meta property="article:published_time" content="2022-03-01T01:01:00.000Z">
-<meta property="article:modified_time" content="2022-03-01T01:10:01.202Z">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-70.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-71.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-72.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-73.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-77.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-78.png">
+<meta property="og:image" content="http://zhangyuanqian.top/images/pasted-79.png">
+<meta property="article:published_time" content="2022-03-24T01:26:00.000Z">
+<meta property="article:modified_time" content="2022-03-24T01:38:48.940Z">
 <meta property="article:author" content="Rex Y Zhang">
-<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="NoSQL">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://zhangyuanqian.top/images/pasted-55.png">
+<meta name="twitter:image" content="http://zhangyuanqian.top/images/pasted-70.png">
 
-<link rel="canonical" href="http://zhangyuanqian.top/2022/03/01/Redis-%E7%A9%B6%E7%AB%9F%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E6%98%AF%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%91%A2%EF%BC%9F/">
+<link rel="canonical" href="http://zhangyuanqian.top/2022/03/24/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91%EF%BC%9A%E4%BA%86%E8%A7%A3Redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%E5%90%97%EF%BC%9F7%E5%BC%A0%E5%9B%BE%E8%AF%A6%E8%A7%A3%EF%BC%81/">
 
 
 <script id="page-configurations">
@@ -54,7 +56,7 @@
   };
 </script>
 
-  <title>Redis 究竟是单线程还是多线程呢？ | Yuanqian's Blog</title>
+  <title>面试官问我：了解Redis哨兵机制吗？7张图详解！ | Yuanqian's Blog</title>
   
 
 
@@ -211,7 +213,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://zhangyuanqian.top/2022/03/01/Redis-%E7%A9%B6%E7%AB%9F%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E6%98%AF%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%91%A2%EF%BC%9F/">
+    <link itemprop="mainEntityOfPage" href="http://zhangyuanqian.top/2022/03/24/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91%EF%BC%9A%E4%BA%86%E8%A7%A3Redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%E5%90%97%EF%BC%9F7%E5%BC%A0%E5%9B%BE%E8%AF%A6%E8%A7%A3%EF%BC%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -224,7 +226,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Redis 究竟是单线程还是多线程呢？
+          面试官问我：了解Redis哨兵机制吗？7张图详解！
         </h1>
 
         <div class="post-meta">
@@ -236,7 +238,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-03-01 09:01:00 / 修改时间：09:10:01" itemprop="dateCreated datePublished" datetime="2022-03-01T09:01:00+08:00">2022-03-01</time>
+              <time title="创建时间：2022-03-24 09:26:00 / 修改时间：09:38:48" itemprop="dateCreated datePublished" datetime="2022-03-24T09:26:00+08:00">2022-03-24</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -259,43 +261,45 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><img src="/images/pasted-55.png" alt="upload successful"><br>Redis一直以来都是高性能分布式缓存中间件的代表，我们经常说Redis是单线程的，也有人说Redis在6.0版本采用了多线程，那么Redis到底是采用单线程呢？还是多线程？本文我们来一探究竟</p>
+        <h4 id="先聊聊什么是哨兵机制"><a href="#先聊聊什么是哨兵机制" class="headerlink" title="先聊聊什么是哨兵机制?"></a>先聊聊什么是哨兵机制?</h4><p>Redis的哨兵(sentinel) 系统用于管理多个 Redis 服务器,该系统执行以下三个任务:<br></p>
+<p><strong>监控(Monitoring)：</strong> 哨兵(sentinel) 会不断地检查你的Master和Slave是否运作正常。<br></p>
+<p><strong>提醒(Notification)：</strong> 当被监控的某个 Redis出现问题时, 哨兵(sentinel) 可以通过 API 向管理员或者其他应用程序发送通知。<br></p>
+<p><strong>自动故障迁移(Automatic failover)：</strong> 当一个Master不能正常工作时，哨兵(sentinel) 会开始一次自动故障迁移操作,它会将失效Master的其中一个Slave升级为新的Master, 并让失效Master的其他Slave改为复制新的Master; 当客户端试图连接失效的Master时,集群也会向客户端返回新Master的地址,使得集群可以使用Master代替失效Master。<br></p>
 <span id="more"></span>
-<h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>Redis到底是单线程还是多线程的？<br></p>
-<p>首先，Redis是一个高性能的分布式缓存中间件。其复杂性不言而喻，对于Redis整体而言肯定不是只有一个线程。<br></p>
-<p>我们常说的Redis 是单线程，主要是指 Redis 在网络 IO和键值对读写是采用一个线程来完成的，这也是 Redis 对外提供键值存储服务的核心流程。但对于 Redis 的其他功能来说，比如持久化、异步删除、集群数据同步等，其实都是由额外的线程执行的。<br></p>
-<h4 id="为什么要融入多线程？"><a href="#为什么要融入多线程？" class="headerlink" title="为什么要融入多线程？"></a>为什么要融入多线程？</h4><p>单线程的优势：</p>
+
+<h5 id="为什么要有哨兵机制？"><a href="#为什么要有哨兵机制？" class="headerlink" title="为什么要有哨兵机制？"></a>为什么要有哨兵机制？</h5><p>哨兵机制的出现是为了解决主从复制的缺点的！再这谈谈redis的主从复制的缺点:<br></p>
 <ul>
-<li>使用单线程可以避免频繁的上下文切换</li>
-<li>Redis 中有各种类型的数据操作，甚至包括一些事务处理，如果采用多线程，还可能因为加锁导致软件复杂度提升，更有可能会因为加解锁，甚至出现死锁，造成的性能损耗，所以使用单线程反而性能会更好</li>
+<li>主从复制，若主节点出现问题，则不能提供服务，需要人工修改配置将从变主</li>
+<li>主从复制主节点的写能力单机，能力有限</li>
+<li>单机节点的存储能力也有限</li>
 </ul>
-<p>单线程的劣势：</p>
-<ul>
-<li>无法发挥多核CPU的优势</li>
-<li>当删除大建，会导致服务阻塞</li>
-<li>QPS达到瓶颈</li>
+<h5 id="哨兵机制-sentinel-的高可用"><a href="#哨兵机制-sentinel-的高可用" class="headerlink" title="哨兵机制(sentinel)的高可用"></a>哨兵机制(sentinel)的高可用</h5><p><strong>原理：</strong> 当主节点出现故障时，由Redis Sentinel自动完成故障发现和转移，并通知应用方，实现高可用性。<br><img src="/images/pasted-70.png" alt="upload successful"></p>
+<p>其实整个过程只需要一个哨兵节点来完成，首先使用Raft算法（选举算法）实现选举机制，选出一个哨兵节点来完成转移和通知</p>
+<h5 id="哨兵的定时监控任务"><a href="#哨兵的定时监控任务" class="headerlink" title="哨兵的定时监控任务"></a>哨兵的定时监控任务</h5><p><strong>任务1：</strong> 每个哨兵节点每10秒会向主节点和从节点发送info命令获取最拓扑结构图，哨兵配置时只要配置对主节点的监控即可，通过向主节点发送info，获取从节点的信息，并当有新的从节点加入时可以马上感知到。<br><img src="/images/pasted-71.png" alt="upload successful"><br><strong>任务2：</strong> 每个哨兵节点每隔2秒会向redis数据节点的指定频道上发送该哨兵节点对于主节点的判断以及当前哨兵节点的信息，同时每个哨兵节点也会订阅该频道，来了解其它哨兵节点的信息及对主节点的判断，其实就是通过消息publish和subscribe来完成的。<br><img src="/images/pasted-72.png" alt="upload successful"><br><strong>任务3：</strong> 每隔1秒每个哨兵会向主节点、从节点及其余哨兵节点发送一次ping命令做一次心跳检测，这个也是哨兵用来判断节点是否正常的重要依据。<br><img src="/images/pasted-73.png" alt="upload successful"><br><strong>客观下线：</strong> 当主观下线的节点是主节点时，此时该哨兵3节点会通过指令sentinel is-masterdown-by-addr寻求其它哨兵节点对主节点的判断，当超过quorum（选举）个数，此时哨兵节点则认为该主节点确实有问题，这样就客观下线了，大部分哨兵节点都同意下线操作，也就说是客观下线。</p>
+<h5 id="领导者哨兵选举流程"><a href="#领导者哨兵选举流程" class="headerlink" title="领导者哨兵选举流程"></a>领导者哨兵选举流程</h5><ul>
+<li>每个在线的哨兵节点都可以成为领导者，当它确认（比如哨兵3）主节点下线时，会向其它哨兵发is-master-down-by-addr命令，征求判断并要求将自己设置为领导者，由领导者处理故障转移；</li>
+<li>当其它哨兵收到此命令时，可以同意或者拒绝它成为领导者；</li>
+<li>如果哨兵3发现自己在选举的票数大于等于num(sentinels)/2+1时，将成为领导者，如果没有超过，继续选举…………</li>
 </ul>
-<p>基于上诉劣势，Redis也进行了相关优化，在4.0版本和6.0版本分别引入了Lazy Free和多线程IO。</p>
-<h4 id="Redis单线程模型"><a href="#Redis单线程模型" class="headerlink" title="Redis单线程模型"></a>Redis单线程模型</h4><p>Redis基于Reactor模式开发了网络事件处理器，这个处理器被称为文件事件处理器。<br></p>
-<p>文件事件处理器的四个重要组成部分：<br></p>
-<ul>
-<li>多个套接字请求</li>
-<li>IO多路复用器</li>
-<li>文件事件派发器</li>
-<li>事件处理器</li>
+<h5 id="故障转移机制"><a href="#故障转移机制" class="headerlink" title="故障转移机制"></a>故障转移机制</h5><p><strong>由Sentinel节点定期监控发现主节点是否出现了故障：</strong> sentinel会向master发送心跳PING来确认master是否存活，如果master在“一定时间范围”内不回应PONG 或者是回复了一个错误消息，那么这个sentinel会主观地(单方面地)认为这个master已经不可用了<br><img src="/images/pasted-77.png" alt="upload successful"><br><strong>当主节点出现故障</strong>， 此时3个Sentinel节点共同选举了Sentinel3节点为领导，负载处理主节点的故障转移<br><img src="/images/pasted-78.png" alt="upload successful"><br><strong>由Sentinel3领导者节点执行故障转移，过程和主从复制一样，但是自动执行</strong><br><img src="/images/pasted-79.png" alt="upload successful"></p>
+<p><strong>流程：</strong></p>
+<ol>
+<li>将slave-1脱离原从节点，升级主节点，</li>
+<li>将从节点slave-2指向新的主节点</li>
+<li>通知客户端主节点已更换</li>
+<li>将原主节点（oldMaster）变成从节点，指向新的主节点</li>
+</ol>
+<p><strong>故障转移后的redis sentinel的拓扑结构图</strong></p>
+<h5 id="哨兵机制－故障转移详细流程-确认主节点"><a href="#哨兵机制－故障转移详细流程-确认主节点" class="headerlink" title="哨兵机制－故障转移详细流程-确认主节点"></a>哨兵机制－故障转移详细流程-确认主节点</h5><ul>
+<li>过滤掉不健康的（下线或断线），没有回复过哨兵ping响应的从节点</li>
+<li>选择salve-priority从节点优先级最高（redis.conf）的</li>
+<li>选择复制偏移量最大，此指复制最完整的从节点</li>
 </ul>
-<p>Redis客户端对服务端的每次调用都经历了发送命令，执行命令，返回结果三个过程。其中执行命令阶段，由于Redis是单线程来处理命令的，所有每一条到达服务端的命令不会立刻执行，所有的命令都会进入一个队列中，然后逐个被执行。并且多个客户端发送的命令的执行顺序是不确定的。但是可以确定的是不会有两条命令被同时执行，不会产生并发问题，这就是Redis的单线程基本模型，如下图所示。<br></p>
-<p><img src="/images/pasted-56.png" alt="upload successful"></p>
-<h4 id="带你理解Redis处理流程"><a href="#带你理解Redis处理流程" class="headerlink" title="带你理解Redis处理流程"></a>带你理解Redis处理流程</h4><h5 id="Redis-4-0之前的事件处理流程"><a href="#Redis-4-0之前的事件处理流程" class="headerlink" title="Redis 4.0之前的事件处理流程"></a>Redis 4.0之前的事件处理流程</h5><p>我们先介绍一下Redis（ 4.0之前）的执行原理，我们通过IO多路复用器监听来自客户端的socket网络连接，然后由主线程进行IO请求的处理以及命令的处理，所有操作都是线性的，我们可以抽象的理解为下图。<br></p>
-<p><img src="/images/pasted-57.png" alt="upload successful"></p>
-<h5 id="Redis-4-0-之后加入Lazy-Free机制"><a href="#Redis-4-0-之后加入Lazy-Free机制" class="headerlink" title="Redis 4.0 之后加入Lazy Free机制"></a>Redis 4.0 之后加入Lazy Free机制</h5><p>Redis 4.0 之前在处理客户端命令和IO操作时都是以单线程形式运行，期间不会响应其他客户端请求，但若客户端向Redis发送一条耗时较长的命令，比如删除一个含有上百万对象的Set键，或者执行flushdb，flushall操作，Redis服务器需要回收大量的内存空间，这事就会导致Redis服务阻塞，对于负载较高的缓存系统来说将会是个灾难。为了解决这个问题，在Redis 4.0版本引入了Lazy Free，目的是将慢操作异步化，这也是在事件处理上向多线程迈进了一步，其过程我们可以理解为下图。</p>
-<p><img src="/images/pasted-58.png" alt="upload successful"></p>
-<h5 id="Redis-6-0-之后将网络IO异步化"><a href="#Redis-6-0-之后将网络IO异步化" class="headerlink" title="Redis 6.0 之后将网络IO异步化"></a>Redis 6.0 之后将网络IO异步化</h5><p>从以上的发展历程中，我们也能看出Redis 的瓶颈并不在CPU上，即使是单线程Redis也能做到很快的响应，除非是遇到个别极其耗时的命令，这一块我们的Redis也在4.0版本做出了优化，但是我们是不是能更进一步优化Redis呢？从上图中我们可以看出主线程不光处理大量的命令，还需要处理大量的网络IO，Redis6.0就是基于此，将IO操作交由其他线程处理，抽象的理解如下图所示。</p>
-<p><img src="/images/pasted-69.png" alt="upload successful"></p>
-<p>Redis6.0的多线程默认是禁用的，只使用主线程。如需开启需要修改redis.conf配置文件：io-threads-do-reads yes <br></p>
-<p>开启多线程后，还需要设置线程数，否则是不生效的。<br></p>
-<p>线程数一定要小于机器核数。线程数并不是越大越好，官方认为超过了 8 个基本就没什么意义了。<br></p>
-<p>设置线程数，修改redis.conf配置文件： io-threads <br></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p><strong>redis哨兵的作用:</strong></p>
+<ol>
+<li>监控主数据库和从数据库是否正常运行。</li>
+<li>主数据库出现故障时，可以自动将从数据库转换为主数据库，实现自动切换。</li>
+</ol>
 
     </div>
 
@@ -331,7 +335,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://zhangyuanqian.top/2022/03/01/Redis-%E7%A9%B6%E7%AB%9F%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E6%98%AF%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%91%A2%EF%BC%9F/" title="Redis 究竟是单线程还是多线程呢？">http://zhangyuanqian.top/2022/03/01/Redis-究竟是单线程还是多线程呢？/</a>
+    <a href="http://zhangyuanqian.top/2022/03/24/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91%EF%BC%9A%E4%BA%86%E8%A7%A3Redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%E5%90%97%EF%BC%9F7%E5%BC%A0%E5%9B%BE%E8%AF%A6%E8%A7%A3%EF%BC%81/" title="面试官问我：了解Redis哨兵机制吗？7张图详解！">http://zhangyuanqian.top/2022/03/24/面试官问我：了解Redis哨兵机制吗？7张图详解！/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -371,7 +375,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"># 数据库</a>
+              <a href="/tags/NoSQL/" rel="tag"># NoSQL</a>
           </div>
 
         
@@ -380,13 +384,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/02/24/%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9%E6%95%B0%E6%8D%AE%E5%BA%93%E7%BC%93%E5%AD%98%E5%8F%8C%E5%86%99%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/" rel="prev" title="如何应对数据库缓存双写一致性问题">
-      <i class="fa fa-chevron-left"></i> 如何应对数据库缓存双写一致性问题
+    <a href="/2022/03/01/Redis-%E7%A9%B6%E7%AB%9F%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E6%98%AF%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%91%A2%EF%BC%9F/" rel="prev" title="Redis 究竟是单线程还是多线程呢？">
+      <i class="fa fa-chevron-left"></i> Redis 究竟是单线程还是多线程呢？
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/03/24/%E9%9D%A2%E8%AF%95%E5%AE%98%E9%97%AE%E6%88%91%EF%BC%9A%E4%BA%86%E8%A7%A3Redis%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%E5%90%97%EF%BC%9F7%E5%BC%A0%E5%9B%BE%E8%AF%A6%E8%A7%A3%EF%BC%81/" rel="next" title="面试官问我：了解Redis哨兵机制吗？7张图详解！">
-      面试官问我：了解Redis哨兵机制吗？7张图详解！ <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -445,7 +446,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%9E%8D%E5%85%A5%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">为什么要融入多线程？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">Redis单线程模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%A6%E4%BD%A0%E7%90%86%E8%A7%A3Redis%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">带你理解Redis处理流程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis-4-0%E4%B9%8B%E5%89%8D%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B"><span class="nav-number">4.1.</span> <span class="nav-text">Redis 4.0之前的事件处理流程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis-4-0-%E4%B9%8B%E5%90%8E%E5%8A%A0%E5%85%A5Lazy-Free%E6%9C%BA%E5%88%B6"><span class="nav-number">4.2.</span> <span class="nav-text">Redis 4.0 之后加入Lazy Free机制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis-6-0-%E4%B9%8B%E5%90%8E%E5%B0%86%E7%BD%91%E7%BB%9CIO%E5%BC%82%E6%AD%A5%E5%8C%96"><span class="nav-number">4.3.</span> <span class="nav-text">Redis 6.0 之后将网络IO异步化</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%88%E8%81%8A%E8%81%8A%E4%BB%80%E4%B9%88%E6%98%AF%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">先聊聊什么是哨兵机制?</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">为什么要有哨兵机制？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6-sentinel-%E7%9A%84%E9%AB%98%E5%8F%AF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">哨兵机制(sentinel)的高可用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%93%A8%E5%85%B5%E7%9A%84%E5%AE%9A%E6%97%B6%E7%9B%91%E6%8E%A7%E4%BB%BB%E5%8A%A1"><span class="nav-number">1.3.</span> <span class="nav-text">哨兵的定时监控任务</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%A2%86%E5%AF%BC%E8%80%85%E5%93%A8%E5%85%B5%E9%80%89%E4%B8%BE%E6%B5%81%E7%A8%8B"><span class="nav-number">1.4.</span> <span class="nav-text">领导者哨兵选举流程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB%E6%9C%BA%E5%88%B6"><span class="nav-number">1.5.</span> <span class="nav-text">故障转移机制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%93%A8%E5%85%B5%E6%9C%BA%E5%88%B6%EF%BC%8D%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB%E8%AF%A6%E7%BB%86%E6%B5%81%E7%A8%8B-%E7%A1%AE%E8%AE%A4%E4%B8%BB%E8%8A%82%E7%82%B9"><span class="nav-number">1.6.</span> <span class="nav-text">哨兵机制－故障转移详细流程-确认主节点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
